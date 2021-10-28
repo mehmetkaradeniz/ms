@@ -1,20 +1,36 @@
 version: '3.4'
 
 services:
-  catalogdb:
-    container_name: catalogdb
+  mscatalogdb:
+    container_name: mscatalogdb
     restart: always
     ports:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
 
-  catalog.api:
-    container_name: catalog.api
+  msbasketdb:
+    container_name: msbasketdb
+    restart: always
+    ports:
+      - "6379:6379"
+
+  mscatalogapi:
+    container_name: mscatalogapi
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "DatabaseSettings:ConnectionString=mongodb://catalogdb:27017"
+      - "DatabaseSettings:ConnectionString=mongodb://mscatalogdb:27017"
     depends_on:
-      - catalogdb
+      - mscatalogdb
     ports:
       - "8000:80"
+
+  msbasketapi:
+    container_name: msbasketapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "CacheSettings:ConnectionString=msbasketdb:6379"
+    depends_on:
+      - msbasketdb
+    ports:
+      - "8001:80"
