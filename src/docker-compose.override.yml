@@ -15,6 +15,32 @@ services:
     ports:
       - "6379:6379"
 
+  msdiscountdb:
+    container_name: msdiscountdb
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
+      - POSTGRES_DB=DiscountDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  msdiscountdbui:
+    container_name: msdiscountdbui
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@aspnetrun.com
+      - PGADMIN_DEFAULT_PASSWORD=admin1234
+    restart: always
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/root/.pgadmin
+
+
+
+
   msportainer:
     container_name: msportainer
     restart: always
@@ -44,3 +70,15 @@ services:
       - msbasketdb
     ports:
       - "8001:80"
+
+  msdiscountapi:
+    container_name: msdiscountapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Mehmet=Deneme
+      - "DatabaseSettings:ConnectionString=Server=msdiscountdb;Port=5432;Database=DiscountDb;User Id=admin;Password=admin1234;"
+    depends_on:
+      - msdiscountdb
+    ports:
+      - "8002:80"
+

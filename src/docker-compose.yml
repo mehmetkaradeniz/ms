@@ -7,6 +7,14 @@ services:
   msbasketdb:
     image: redis:alpine
 
+  msdiscountdb:
+    image: postgres
+
+  msdiscountdbui:
+    image: dpage/pgadmin4
+
+
+
   msportainer:
     image: portainer/portainer-ce
 
@@ -22,6 +30,15 @@ services:
       context: .
       dockerfile: Services/Basket/Basket.API/Dockerfile
 
+  msdiscountapi:
+    image: ${DOCKER_REGISTRY-}msdiscountapi
+    build:
+      context: .
+      dockerfile: Services/Discount/Discount.API/Dockerfile
+
 volumes:
   mongo_data:
   portainer_data:
+  postgres_data:
+  pgadmin_data:
+
