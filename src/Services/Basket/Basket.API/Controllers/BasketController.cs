@@ -1,4 +1,5 @@
 ﻿using Basket.API.Entities;
+using Basket.API.GrpcServices;
 using Basket.API.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,10 +14,12 @@ namespace Basket.API.Controllers
     {
 
         private readonly IBasketRepository _repository;
+        private readonly IDiscountService _discountService;
 
-        public BasketController(IBasketRepository repository)
+        public BasketController(IBasketRepository repository, IDiscountService discountService)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _discountService = discountService ?? throw new ArgumentNullException(nameof(discountService));
         }
 
         [HttpGet("{username}", Name = "Get")]
@@ -31,6 +34,14 @@ namespace Basket.API.Controllers
         [ProducesResponseType(typeof(BasketEntity), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<BasketEntity>> Update(BasketEntity basket)
         {
+            foreach (var item in basket.Items)
+            {
+                // Performance is important here (for each item we communicate with discount.grpc service)
+                // So it is important that we use postgres with dapper
+                var coupon = await _discountService.Get(item.ProductName);
+                item.Price -= coupon.Amount;
+            }
+
             return Ok(await _repository.Update(basket));
         }
 

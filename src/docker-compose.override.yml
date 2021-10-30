@@ -66,6 +66,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "CacheSettings:ConnectionString=msbasketdb:6379"
+      - "GrpcSettings:DiscountUrl=http://msdiscountgrpc"
     depends_on:
       - msbasketdb
     ports:
@@ -75,10 +76,19 @@ services:
     container_name: msdiscountapi
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - Mehmet=Deneme
       - "DatabaseSettings:ConnectionString=Server=msdiscountdb;Port=5432;Database=DiscountDb;User Id=admin;Password=admin1234;"
     depends_on:
       - msdiscountdb
     ports:
       - "8002:80"
+
+  msdiscountgrpc:
+    container_name: msdiscountgrpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettings:ConnectionString=Server=msdiscountdb;Port=5432;Database=DiscountDb;User Id=admin;Password=admin1234;"
+    depends_on:
+      - msdiscountdb
+    ports:
+      - "8003:80"
 
