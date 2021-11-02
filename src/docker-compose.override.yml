@@ -27,16 +27,15 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
-  msdiscountdbui:
-    container_name: msdiscountdbui
+  msorderdb:
+    container_name: msorderdb
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@aspnetrun.com
-      - PGADMIN_DEFAULT_PASSWORD=admin1234
+      SA_PASSWORD: SwN12345678
+      ACCEPT_EULA: "Y"
     restart: always
     ports:
-      - "5050:80"
-    volumes:
-      - pgadmin_data:/root/.pgadmin
+      - "1433:1433"
+
 
 
 
@@ -72,6 +71,17 @@ services:
     ports:
       - "8001:80"
 
+  msdiscountdbui:
+    container_name: msdiscountdbui
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@aspnetrun.com
+      - PGADMIN_DEFAULT_PASSWORD=admin1234
+    restart: always
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/root/.pgadmin
+
   msdiscountapi:
     container_name: msdiscountapi
     environment:
@@ -91,4 +101,14 @@ services:
       - msdiscountdb
     ports:
       - "8003:80"
+
+  msorderapi:
+    container_name: msorderapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:OrderConnectionString=Server=msorderdb;Database=OrderDb;User Id=sa;Password=SwN12345678"
+    depends_on:
+      - msorderdb
+    ports:
+      - "8004:80"
 

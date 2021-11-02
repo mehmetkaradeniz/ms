@@ -10,8 +10,9 @@ services:
   msdiscountdb:
     image: postgres
 
-  msdiscountdbui:
-    image: dpage/pgadmin4
+  msorderdb:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+
 
 
 
@@ -30,6 +31,9 @@ services:
       context: .
       dockerfile: Services/Basket/Basket.API/Dockerfile
 
+  msdiscountdbui:
+    image: dpage/pgadmin4
+
   msdiscountapi:
     image: ${DOCKER_REGISTRY-}msdiscountapi
     build:
@@ -42,10 +46,17 @@ services:
       context: .
       dockerfile: Services/Discount/Discount.Grpc/Dockerfile
 
+  msorderapi:
+    image: ${DOCKER_REGISTRY-}msorderapi
+    build:
+      context: .
+      dockerfile: Services/Order/Order.API/Dockerfile
+
 volumes:
   mongo_data:
   portainer_data:
   postgres_data:
   pgadmin_data:
+
 
 
