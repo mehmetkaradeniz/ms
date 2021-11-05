@@ -8,7 +8,6 @@ using Order.Application.Features.Orders.Commands.UpdateOrder;
 using Order.Application.Features.Orders.Queries.GetOrdersList;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 

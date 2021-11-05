@@ -36,7 +36,12 @@ services:
     ports:
       - "1433:1433"
 
-
+  msrabbitmq:
+    container_name: msrabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
 
 
@@ -66,8 +71,10 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - "CacheSettings:ConnectionString=msbasketdb:6379"
       - "GrpcSettings:DiscountUrl=http://msdiscountgrpc"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@msrabbitmq:5672"
     depends_on:
       - msbasketdb
+      - msrabbitmq
     ports:
       - "8001:80"
 
@@ -107,8 +114,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ConnectionStrings:OrderConnectionString=Server=msorderdb;Database=OrderDb;User Id=sa;Password=SwN12345678"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@msrabbitmq:5672"
     depends_on:
       - msorderdb
+      - msrabbitmq
     ports:
       - "8004:80"
 
