@@ -121,3 +121,15 @@ services:
     ports:
       - "8004:80"
 
+  msapigw:
+    container_name: msapigw
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - mscatalogapi
+      - msbasketapi
+      - msdiscountapi
+      - msorderapi
+    ports:
+      - "8010:80"
+
