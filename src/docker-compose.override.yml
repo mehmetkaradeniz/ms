@@ -133,3 +133,17 @@ services:
     ports:
       - "8010:80"
 
+  msshoppingaggregator:
+    container_name: msshoppingaggregator
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ApiSettings:CatalogUrl=http://mscatalogapi"
+      - "ApiSettings:BasketUrl=http://msbasketapi"
+      - "ApiSettings:OrderUrl=http://msorderapi"
+    depends_on:
+      - mscatalogapi
+      - msbasketapi
+      - msorderapi
+    ports:
+      - "8005:80"
+
