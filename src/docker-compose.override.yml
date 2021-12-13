@@ -147,3 +147,19 @@ services:
     ports:
       - "8005:80"
 
+  mswebapp:
+    container_name: mswebapp
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ApiSettings:GatewayAddress=http://msapigw"
+    depends_on:
+      - msapigw
+      - mscatalogapi
+      - msbasketapi
+      - msdiscountapi
+      - msorderapi
+    ports:
+      - "8006:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
